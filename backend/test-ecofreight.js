@@ -10,10 +10,18 @@ console.log(await calcolaCo2Viaggio({ mezzo: "aereo", origine: "Roma, Italia", d
 console.log("\nTest 2 - Milano → Roma in treno, 23 kg:");
 console.log(await calcolaCo2Viaggio({ mezzo: "treno", origine: "Milano, Italia", destinazione: "Roma, Italia", peso_kg: 23 }));
 
-// Test 3: località inesistente (deve dare un errore leggibile, non bloccarsi)
+// Test 3: località inventata → deve dire "non trovata"
 console.log("\nTest 3 - località inventata:");
 console.log(await calcolaCo2Viaggio({ mezzo: "aereo", origine: "Xyzqwkk", destinazione: "Roma, Italia", peso_kg: 23 }));
 
-// Test 4: mezzo non supportato (fermato PRIMA di chiamare l'API)
-console.log("\nTest 4 - mezzo non supportato:");
+// Test 4: località ambigua → deve chiedere quale Paris
+console.log("\nTest 4 - località ambigua:");
+console.log(await calcolaCo2Viaggio({ mezzo: "treno", origine: "Roma, Italia", destinazione: "Paris", peso_kg: 23 }));
+
+// Test 5: refuso → deve trovare un luogo e mostrarne il nome, così si vede cosa ha "capito"
+console.log("\nTest 5 - refuso (Bankgok):");
+console.log(await calcolaCo2Viaggio({ mezzo: "aereo", origine: "Roma, Italia", destinazione: "Bankgok", peso_kg: 23 }));
+
+// Test 6: mezzo non supportato (fermato PRIMA di chiamare l'API)
+console.log("\nTest 6 - mezzo non supportato:");
 console.log(await calcolaCo2Viaggio({ mezzo: "bicicletta", origine: "Roma", destinazione: "Napoli", peso_kg: 10 }));
