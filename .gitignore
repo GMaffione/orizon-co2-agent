@@ -1,0 +1,8 @@
+# Dipendenze installate (si rigenerano con npm install)
+node_modules/
+
+# Credenziali: MAI su GitHub
+.env
+
+# File generati dalla build del front end
+dist/
