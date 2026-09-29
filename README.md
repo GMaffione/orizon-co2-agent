@@ -7,7 +7,8 @@ in modo semplice, con un consiglio per viaggiare in modo più sostenibile.
 
 Progetto realizzato per **Orizon**, agenzia di viaggi specializzata in turismo responsabile.
 
-🔗 **App online:** _link Netlify_ · **Back end:** _link Render_
+🔗 **App online:** https://lucent-meringue-a805c5.netlify.app  
+_(al primo accesso il server gratuito può impiegare fino a un minuto a rispondere)_
 
 ---
 
