@@ -1,17 +1,18 @@
 {
-  "name": "backend",
+  "name": "orizon-co2-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "Back end dell'assistente Orizon per la stima della CO2 dei viaggi",
+  "main": "server.js",
   "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "mongodb": "^7.7.0",
     "openai": "^7.23.0"
   }
 }

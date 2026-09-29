@@ -79,27 +79,26 @@ async function risolviLuogo(testo) {
     };
   }
 
-   // Controllo ambiguità: se l'utente ha scritto SOLO il nome della città
-  // (nessuna virgola, es. "Paris") e i candidati stanno in PAESI diversi,
-  // il nome è ambiguo e non scegliamo a caso.
-  // Se invece ha già indicato il paese (es. "Bangkok, Thailandia"), ci
-  // fidiamo del primo candidato, il più rilevante: nei test, "Bangkok,
-  // Thailandia" restituiva anche un omonimo in Indonesia, e segnalarlo
-  // come ambiguo sarebbe stato un falso allarme.
-  const paeseIndicato = testo.includes(",");
-  const paesi = [...new Set(candidati.map((c) => c.address?.country ?? c.display_name.split(", ").pop()))];
-  if (!paeseIndicato && paesi.length > 1) {
-    return {
-      ok: false,
-      errore: `La località "${testo}" è ambigua. Chiedi all'utente di aggiungere il paese.`,
-    };
-  }
-
-  // Un solo paese: prendiamo il primo candidato, il più rilevante.
+  // Nomi presenti in più paesi (es. Paris: Francia e Stati Uniti).
+  // Scelta finale dopo i test: NON blocchiamo il calcolo (chiedere ogni volta
+  // "quale Roma?" era frustrante: quasi ogni città ha un omonimo all'estero).
+  // Prendiamo il primo candidato, il più rilevante per il servizio, e
+  // segnaliamo gli altri paesi possibili: l'agente li cita in una riga, così
+  // l'utente può correggere se intendeva un altro luogo.
+  // I paesi si confrontano con il CODICE (es. "IT"), non con il nome, perché
+  // l'API risponde in lingue diverse ("Italia" / "Italy").
   const scelto = candidati[0];
+  const codiceDi = (c) => (c.address?.country_code ?? c.display_name.split(", ").pop()).toUpperCase();
+  const nomePaeseDi = (c) => c.address?.country ?? c.display_name.split(", ").pop();
+  const paeseIndicato = testo.includes(","); // es. "Paris, Francia": l'utente ha già scelto
+  const altriPaesi = paeseIndicato
+    ? []
+    : [...new Set(candidati.filter((c) => codiceDi(c) !== codiceDi(scelto)).map(nomePaeseDi))];
+
   return {
     ok: true,
     nome: scelto.display_name,
+    altriPaesi,
     // Attenzione: /location restituisce "lon", ma /calculate vuole "lng"
     coordinate: { lat: scelto.lat, lng: scelto.lon },
   };
@@ -174,6 +173,9 @@ export async function calcolaCo2Viaggio({ mezzo, origine, destinazione, peso_kg 
     // Nomi risolti: l'agente li mostra all'utente per conferma
     origine_trovata: luogoOrigine.nome,
     destinazione_trovata: luogoDestinazione.nome,
+    // Se il nome esiste anche in altri paesi, lo segnaliamo all'agente
+    ...(luogoOrigine.altriPaesi.length && { origine_esiste_anche_in: luogoOrigine.altriPaesi }),
+    ...(luogoDestinazione.altriPaesi.length && { destinazione_esiste_anche_in: luogoDestinazione.altriPaesi }),
     peso_kg,
     co2_kg: Math.round(dati.emissions.total * 100) / 100, // arrotondato a 2 decimali
     distanza_km: Math.round(dati.calculation.distance),

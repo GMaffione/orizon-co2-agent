@@ -14,8 +14,8 @@ console.log(await calcolaCo2Viaggio({ mezzo: "treno", origine: "Milano, Italia",
 console.log("\nTest 3 - località inventata:");
 console.log(await calcolaCo2Viaggio({ mezzo: "aereo", origine: "Xyzqwkk", destinazione: "Roma, Italia", peso_kg: 23 }));
 
-// Test 4: località ambigua → deve chiedere quale Paris
-console.log("\nTest 4 - località ambigua:");
+// Test 4: nome presente in più paesi → calcola con il più rilevante e segnala gli altri paesi
+console.log("\nTest 4 - nome presente in più paesi (Paris):");
 console.log(await calcolaCo2Viaggio({ mezzo: "treno", origine: "Roma, Italia", destinazione: "Paris", peso_kg: 23 }));
 
 // Test 5: refuso → deve trovare un luogo e mostrarne il nome, così si vede cosa ha "capito"
